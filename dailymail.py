@@ -18,6 +18,8 @@ from pdfminer.layout import *
 from pdfminer.converter import PDFPageAggregator
 #socks.setdefaultproxy(socks.PROXY_TYPE_SOCKS5, "127.0.0.1", 1080)
 #socket.socket = socks.socksocket                      #开启SS代理
+reload(sys)
+sys.setdefaultencoding('utf-8')
 urllist={"SS":"http://ipo.sseinfo.com/info/xgfxyl/","SZ":"http://www.cninfo.com.cn/eipo/index.jsp"}
 list_seg=[
                 "ONLINE_CIRCULATION",    #网上
@@ -36,7 +38,7 @@ list_seg=[
           ]   #json 键
 html_list={}
 dict_week={"1":u"周一","2":u"周二","3":u"周三","4":u"周四","5":u"周五"}
-dict_type={"0":u"0网上","1":u"1网下","2":u"2网上网下"}
+dict_type={"0":u"0 网上","1":u"1 网下","2":u"2 网上网下"}
 message_list = []   #SZ信息列表
 dict_info={"SS":{},"SZ":{}}     #新股详细信息
 info_list=["stockname","start_date","weekday","city","stockid","stock_pur","price","stid_cy","pur_type","total","on_int","under_int","min_pur","end_date","url"]                #新股基础字段
@@ -61,43 +63,54 @@ def get_time(i):
 def get_end():
     return get_time(3).strftime("%Y-%m-%d")
 def get_holiday(strdate):
-    url = 'http://api.k780.com:88'
-    params = {
-        'app': 'life.workday',
-        'date': strdate,
-        'appkey': '22387',
-        'sign': '4647060331a7fa81d4ac79d2f0d408e8',
-        'format': 'json',
-    }
-
-    params = urlencode(params)
-    f = urllib.urlopen('%s?%s' % (url, params))
-    nowapi_call = f.read()
-    a_result = json.loads(nowapi_call)
-
-    if a_result["result"]["workmk"] == "1":  #工作日 1
+    #百度接口
+    url = 'http://apis.baidu.com/xiaogg/holiday/holiday?d=%s'%strdate
+    req = urllib2.Request(url)
+    req.add_header("apikey", "xxxxxx")
+    resp = urllib2.urlopen(req)
+    content = resp.read()
+    if content=="0":   #工作日
         return True
     else:
-        return False
+        return  False
+    #now api 接口
+    # url = 'http://api.k780.com:88'
+    # params = {
+    #     'app': 'life.workday',
+    #     'date': strdate,
+    #     'appkey': 'xxxxxxx',
+    #     'sign': 'XXXXX',
+    #     'format': 'json',
+    # }
+    #
+    # params = urlencode(params)
+    # f = urllib.urlopen('%s?%s' % (url, params))
+    # nowapi_call = f.read()
+    # c+=1
+    # print c
+    # a_result = json.loads(nowapi_call)
+    # try:
+    #     t=a_result["result"]["workmk"]
+    # except KeyError:
+    #     print a_result["msg"]
+    #     exit()
+    # else:
+    #     if t=="1":
+    #         return True
+    #     else:
+    #         return  False
 def get_num(str_a):
-    if str_a=="null":
-        return 0
+    try:
+        flt_a=float(str_a)
+    except ValueError:
+        return "0"
     else:
-        tt=""
-        a=str_a.split(".")
-        if len(a)==2:
-            s=4-len(a[1])
-            for i in xrange(s):
-                tt=tt+"0"
-            return a[0]+a[1]+tt
-        if len(a)==1:
-            return str_a+"0000"
+        return ("%.4f"%flt_a).replace(".","")
 def downpdf(stockid,url_l,i):
     downpath=r"C:\Users\Administrator\Desktop\%s_%s.pdf" %(stockid,i)
     urllib.urlretrieve(url_l,downpath)
 def get_ssurl(stockid):
     sta_ss=0
-
     time_i=time.strftime("%Y-%m-%d", time.localtime())
     timei=time.strftime("%Y%m%d",time.localtime())
     for i in xrange(1,10):
@@ -108,20 +121,15 @@ def get_ssurl(stockid):
         try:
             print "begin download %s_%s" %(stockid,i)
             downpdf(stockid,spath,i)
-            print "end"
-            time.sleep(5)
+            time.sleep(2)
 
         except SyntaxError:
             print "not exists ",i
             break
-        print "begin trans"
         f=open(downpath,"rb")
         Pdf2Txt(f,save_name)
         f.close()
-        print "end"
-        print "begin del"
         os.remove(downpath)
-        print "end del"
         with open(save_name,"r") as f:
             for line in f:
                 c=c+1
@@ -131,9 +139,7 @@ def get_ssurl(stockid):
                         break
                 else:
                     break
-        print "begin del"
         os.remove(save_name)
-        print "end del"
         if sta_ss==1:
             return spath
         else:
@@ -258,26 +264,21 @@ def replacecont(cont):                         # cont={SS:{stock:{name:stock},}}
         for p,q in j.items():
             spath=r"C:\Users\Administrator\Desktop\%s.html" %p
             html_list[q["stockname"]]=spath
-
             with open("modual.html","r") as f ,open(spath,"w") as l :
-                for line in f:
-                    new_info = line
-                    for ba_info in info_list:
-
-                        new_info=new_info.replace(ba_info,q[ba_info].encode("utf8"))
-                    l.write(new_info)
+                ht_cont=f.read()
+                l.write(ht_cont %q)
 def mail_custermer(html_list):
     for p,q in html_list.items():
         subject_cont=u"温馨提示--关于新股“%s”的申购提示"%p
         with open(q,"rb") as f:
             cont=f.read()
         msg = MIMEText(cont, 'html', 'utf-8')
-        msg["From"] = formataddr(["someone", 'XXX@sina.com'])
-        msg['To'] = formataddr(["help", 'xx@xx.com'])
+        msg["From"] = formataddr(["chenwm", 'from@xx.com'])
+        msg['To'] = formataddr([u"xxxxx","to@xx.com"])
         msg['Subject'] = subject_cont
         server = smtplib.SMTP("domain")
-        server.login('XXX@sina.com', 'xxxxxx')
-        server.sendmail('XXX@sina.com', ["xx@xx.com"], msg.as_string())
+        server.login('from@xx.com', 'passwd')
+        server.sendmail('from@xx.com', ["to@xx.com,"], msg.as_string())
         server.quit()
         os.remove(q)
 if __name__=="__main__":
