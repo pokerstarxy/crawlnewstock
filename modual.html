@@ -4,16 +4,27 @@
   <meta charset="utf-8">
 <style>
 .mainer{
-       width:1340px;
+       width:1300px;
   font-style:  	SimSun;
+  font-size: 16px;
 }
 .container p{
-  margin: -3px 0;
+  margin: -2px 0;
+}
+.container div {
+text-indent:1.5em;
 }
 .container{
-       width:550px;
-	   margin:0 auto;
+       width:400px;
+	   margin:130px auto;
 }
+  .urldress{
+    font-size: 14px;
+  }
+  .urldress a{
+    color: black;
+   text-decoration: underline;
+  }
 </style>
 
 </head>
@@ -28,12 +39,12 @@
 <p><font color="red">1、stockname(stockid)</font></p>
 <p>根据公告內容，请于start_date初始化后，检查如下配置：</p>
 </br>
-<p>1）在【证券参数】-【证券参数设置】中选择代码『stock_pur』进行核查:</p>
+<div>1）在【证券参数】-【证券参数设置】中选择代码『stock_pur』进行核查:</div>
 <p>交易类型：<font color="red">申购</font>，客户委托价格:<font color="red">1系统定价</font>, 系统定价：<font color="red">price</font>，关联证券内码: <font color="red">stid_cy</font></p>
 </br>
-<p>2）在【证券参数】-【证券发行信息设置】中选择『stock_pur』进行核查：</p>
+<div>2）在【证券参数】-【证券发行信息设置】中选择『stock_pur』进行核查：</div>
 <p>交易类型：<font color="red">申购</font>，申购标识：<font color="red">pur_type</font>，发行总量：<font color="red">total</font>，网上发行量：<font color="red">on_int</font> <font color="red">under_int</font></p>
-<p>3）网上最高申购数量：<font color="red">min_pur</font></p>股
+<div>3）网上最高申购数量：<font color="red">min_pur</font>股</div>
 <p>系统中通过申购代码“stock_pur”下达申购指令。</p>
 <p>缴款开始日期：start_date  缴款结束日期：end_date</p>
 </br>
@@ -41,7 +52,8 @@
 <p>（1）特别提醒：T日申购不扣款，T+1日中签后冻结资金（系统可选择T+2日终冻结），T+3日日终缴款。</p>
 <p>（2）新股发行公告：</p>
 <p>stockname：</p>
-<p>url</p>
+<p class="urldress"><a href="url">url</a></p>
+
 </div>
 </div>
 </html>
