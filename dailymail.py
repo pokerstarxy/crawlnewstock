@@ -272,12 +272,6 @@ def mail_custermer(html_list):
         with open(q,"rb") as f:
             cont=f.read()
         msg = MIMEText(cont, 'html', 'utf-8')
-        # msg["From"] = formataddr(["poker", 'pokerstar_xy@sina.com'])
-        # msg['To'] = formataddr(["showgirl", '857607332@qq.com'])
-        # msg['Subject'] = subject_cont
-        # server = smtplib.SMTP("smtp.sina.com")
-        # server.login('pokerstar_xy@sina.com', 'xy906307')
-        # server.sendmail('pokerstar_xy@sina.com', ["857607332@qq.com"], msg.as_string())
         msg["From"] = formataddr(["someone", 'XXX@sina.com'])
         msg['To'] = formataddr(["help", 'xx@xx.com'])
         msg['Subject'] = subject_cont
