@@ -278,18 +278,17 @@ def mail_custermer(html_list):
         # server = smtplib.SMTP("smtp.sina.com")
         # server.login('pokerstar_xy@sina.com', 'xy906307')
         # server.sendmail('pokerstar_xy@sina.com', ["857607332@qq.com"], msg.as_string())
-        msg["From"] = formataddr(["poker", 'chenwm@szkingdom.com'])
-        msg['To'] = formataddr(["help", 'zhujw@szkingdom.com'])
+        msg["From"] = formataddr(["someone", 'XXX@sina.com'])
+        msg['To'] = formataddr(["help", 'xx@xx.com'])
         msg['Subject'] = subject_cont
-        server = smtplib.SMTP("218.17.227.203")
-        server.login('chenwm@szkingdom.com', 'xy171024.')
-        server.sendmail('chenwm@szkingdom.com', ["zhujw@szkingdom.com"], msg.as_string())
+        server = smtplib.SMTP("domain")
+        server.login('XXX@sina.com', 'xxxxxx')
+        server.sendmail('XXX@sina.com', ["xx@xx.com"], msg.as_string())
         server.quit()
         os.remove(q)
 if __name__=="__main__":
     geturl(urllist)
     replacecont(dict_info)
-    print html_list
     mail_custermer(html_list)
 
 
