@@ -108,7 +108,11 @@ def get_num(str_a):
         return ("%.4f"%flt_a).replace(".","")
 def downpdf(stockid,url_l,i):
     downpath=r"C:\Users\Administrator\Desktop\%s_%s.pdf" %(stockid,i)
-    urllib.urlretrieve(url_l,downpath)
+    try:
+        urllib.urlretrieve(url_l, downpath)
+    except urllib.ContentTooShortError:
+        print 'Network conditions is not good.Reloading.'
+        downpdf(stockid, url_l, i)
 def get_ssurl(stockid):
     sta_ss=0
     time_i=time.strftime("%Y-%m-%d", time.localtime())
