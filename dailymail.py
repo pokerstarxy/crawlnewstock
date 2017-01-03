@@ -105,7 +105,7 @@ def get_num(str_a):
     except ValueError:
         return "0"
     else:
-        return ("%.4f"%flt_a).replace(".","")
+        return str(int(("%.4f"%flt_a).replace(".","")))
 def downpdf(stockid,url_l,i):
     downpath=r"C:\Users\Administrator\Desktop\%s_%s.pdf" %(stockid,i)
     try:
